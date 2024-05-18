@@ -6,10 +6,12 @@ export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
   if (pathname === '/' && token) {
+    console.log({ login:  new URL(getUrl('/app'))})
     return NextResponse.redirect(new URL(getUrl('/app')))
   }
 
   if (pathname.includes('/app') && !token) {
+    console.log({ logout:  new URL(getUrl('/app'))})
     return NextResponse.redirect(new URL(getUrl('/')))
   }
 }
