@@ -17,7 +17,7 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
-import { ButtonSubmit } from "../../../components/ui/button-submit"
+import { ButtonSubmit } from "@/components/ui/button-submit"
 import { useState, useEffect } from "react"
 import {
     Form,
@@ -30,12 +30,12 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { Textarea } from "../../../components/ui/textarea"
+import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
 
 import { useRouter } from "next/navigation"
-import { CreateNewTask } from "@/actions/CreateNewTask"
-import { EditTask } from "@/actions/EditTask"
+import { CreateNewTask, UpdateTask } from "../actions"
+
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -81,11 +81,12 @@ export default function TaskCard({ task, onEdit }: { task: any, onEdit: (task: a
     })
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        
         setIsLoading(true)
 
         try {
             if (task) {
-                await EditTask(task._id, values);
+                await UpdateTask(task._id, values);
                 toast({
                     title: "Task atualizada com sucesso",
                 })

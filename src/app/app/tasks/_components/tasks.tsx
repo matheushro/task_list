@@ -5,6 +5,7 @@ import { DataTable } from "./data-table"
 import { useState } from "react"
 import TaskCard from "./TaskCard";
 
+
 export default function Tasks({tasks}: any){
 
     const [currentTask, setCurrentTask] = useState(null)
@@ -16,7 +17,7 @@ export default function Tasks({tasks}: any){
     }; 
 
     return (
-        <div className="container mx-auto py-10 space-y-5">
+        <div className="space-y-5">
             <TaskCard task={currentTask} onEdit={onEdit} />
             <DataTable data={tasks} onEdit={onEdit} />
         </div>

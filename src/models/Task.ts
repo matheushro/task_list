@@ -2,6 +2,10 @@ import mongoose, { Schema } from 'mongoose';
 
 const taskSchema = new Schema(
     {
+        id_user: {
+            type: String,
+            required: [true, 'O usuário é obrigatório'],
+        },
         name: {
             type: String,
             required: [true, 'O nome é obrigatório'],
