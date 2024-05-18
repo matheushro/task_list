@@ -41,15 +41,27 @@ import { Task } from "@/types/Task"
 
     
     const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-    )
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
 
     const handleEditTodo = (todo: any) => {
         onEdit(todo)
     };
 
     const columns: ColumnDef<Task>[] = [
+      {
+        accessorKey: "status",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="link"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            >
+              Status
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            </Button>
+          )
+        },
+      },
         {
           accessorKey: "priority",
           header: ({ column }) => {
@@ -58,7 +70,7 @@ import { Task } from "@/types/Task"
                 variant="link"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
               >
-                Prioridade
+                Priority
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
             )
@@ -72,7 +84,7 @@ import { Task } from "@/types/Task"
                 variant="link"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
               >
-                Nome
+                Name
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
             )
@@ -87,7 +99,7 @@ import { Task } from "@/types/Task"
                 variant="link"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
               >
-                Data de entrega prevista
+                Expected Delivery
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
             )
@@ -106,7 +118,7 @@ import { Task } from "@/types/Task"
                 variant="link"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
               >
-                Preço
+                Value
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
             )
@@ -125,7 +137,7 @@ import { Task } from "@/types/Task"
                 variant="link"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
               >
-                Data de pagamento
+                Pay Date
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
             )
@@ -138,7 +150,7 @@ import { Task } from "@/types/Task"
         },
         {
           accessorKey: "_id",
-          header: "Opções",
+          header: "Options",
           cell: ({ row }) => {
             const data = row.original
       
@@ -149,7 +161,7 @@ import { Task } from "@/types/Task"
                   <Button variant="ghost"><EllipsisVertical /></Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
-                  <DropdownMenuLabel>Opções da task</DropdownMenuLabel>
+                  <DropdownMenuLabel>Task options</DropdownMenuLabel>
                   <DropdownMenuGroup>
                     <DropdownMenuItem onClick={async () => {
                       await DeleteTask(data._id)
@@ -157,7 +169,7 @@ import { Task } from "@/types/Task"
       
                     }}>
                       <Trash className="mr-2 h-4 w-4" />
-                      <span>Deletar</span>
+                      <span>Delete</span>
                       <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={async () => {
@@ -165,7 +177,7 @@ import { Task } from "@/types/Task"
       
                     }}>
                       <PenIcon className="mr-2 h-4 w-4" />
-                      <span>Editar</span>
+                      <span>Edit</span>
                       <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                     </DropdownMenuItem>
                 

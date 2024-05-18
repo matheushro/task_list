@@ -7,7 +7,7 @@ import TaskCard from "./TaskCard";
 import { Task } from "@/types/Task";
 
 
-export default function Tasks(tasks: Task | any){
+export default function Tasks({tasks}: Task[] | any){
 
     const [currentTask, setCurrentTask] = useState<Task | null>(null)
     const onEdit = (task: Task | null) => {

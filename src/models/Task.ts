@@ -6,6 +6,10 @@ const taskSchema = new Schema(
             type: String,
             required: [true, 'O usuário é obrigatório'],
         },
+        status: {
+            type: String,
+            default: 'Backlog',
+        },
         name: {
             type: String,
             required: [true, 'O nome é obrigatório'],

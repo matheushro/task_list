@@ -52,15 +52,14 @@ const formSchema = z.object({
     expectedDelivery: z.string().max(50, {
         message: "Previsão de entrega deve ter no máximo 50 caractéres.",
     }),
-    priority: z.string().max(50, {
-        message: "Prioridade deve ter no máximo 50 caractéres.",
-    }),
+    priority: z.string().default("Urgent"),
     value: z.string().max(50, {
         message: "Valor deve ter no máximo 50 caractéres.",
     }),
     payDate: z.string().max(50, {
         message: "Data de pagamento deve ter no máximo 50 caractéres.",
     }),
+    status: z.string().default("Backlog")
 })
 
 export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: (task: Task | null) => void }) {
@@ -75,9 +74,10 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
             name: task?.name || "",
             description: task?.description || "",
             expectedDelivery: task?.expectedDelivery || "",
-            priority: task?.priority || "",
+            priority: task?.priority || "Low",
             value: task?.value || "",
             payDate: task?.payDate || "",
+            status: task?.status || "Backlog",
         },
     })
 
@@ -89,19 +89,19 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
             if (task) {
                 await UpdateTask(task._id, values);
                 toast({
-                    title: "Task atualizada com sucesso",
+                    title: "Task updated succesfuly",
                 })
             } else {
                 await CreateNewTask(values);
                 toast({
-                    title: "Task adicionada com sucesso",
+                    title: "Task created succesfuly",
                 })
             }
             form.reset();
             router.refresh()
         } catch (error: any) {
             toast({
-                title: "Erro ao salvar task",
+                title: "An error occurred",
                 description: error.message,
             })
         }
@@ -117,15 +117,17 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                 priority: task.priority,
                 value: task.value,
                 payDate: task.payDate,
+                status: task.status,
             });
         } else {
             form.reset({
                 name: "",
                 description: "",
                 expectedDelivery: "",
-                priority: "",
+                priority: "Low",
                 value: "",
                 payDate: "",
+                status: "Backlog",
             });
         }
     }, [task, form]);
@@ -140,13 +142,13 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button id='cardTask'>{task ? "Editar task" : "Adicionar nova task"}</Button>
+                <Button id='cardTask'>{task ? "Edit task" : "Create new task"}</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>{task ? "Editar task" : "Adicionar nova task"}</DialogTitle>
+                    <DialogTitle>{task ? "Edit task" : "Create new task"}</DialogTitle>
                     <DialogDescription>
-                        {task ? "Atualize as informações da tarefa." : "Cadastre as informações da tarefa."}
+                        {task ? "Update the task information." : "Enter the task information."}
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
@@ -158,9 +160,22 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                                     name="name"
                                     render={({ field }) => (
                                         <FormItem className="w-full">
-                                            <FormLabel>Nome*</FormLabel>
+                                            <FormLabel>Name*</FormLabel>
                                             <FormControl>
-                                                <Input disabled={isLoading} className="w-full" placeholder="Nome da tarefa" {...field} />
+                                                <Input disabled={isLoading} className="w-full" placeholder="Input task name" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="description"
+                                    render={({ field }) => (
+                                        <FormItem className="w-full">
+                                            <FormLabel>Description*</FormLabel>
+                                            <FormControl>
+                                                <Textarea disabled={isLoading} placeholder="Task description" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -172,7 +187,7 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                                         name="expectedDelivery"
                                         render={({ field }) => (
                                             <FormItem className="w-full">
-                                                <FormLabel>Previsão de entrega</FormLabel>
+                                                <FormLabel>Expected delivery</FormLabel>
                                                 <FormControl>
                                                     <Input disabled={isLoading} className="w-full" type="date" {...field} />
                                                 </FormControl>
@@ -185,17 +200,17 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                                         name="priority"
                                         render={({ field }) => (
                                             <FormItem className="w-full">
-                                                <FormLabel>Prioridade</FormLabel>
+                                                <FormLabel>Priority</FormLabel>
                                                 <FormControl>
                                                     <Select disabled={isLoading} onValueChange={field.onChange} defaultValue={field.value}>
                                                         <SelectTrigger className="w-full">
-                                                            <SelectValue placeholder="Prioridade" />
+                                                            <SelectValue placeholder="Priority" />
                                                         </SelectTrigger>
                                                         <SelectContent>
-                                                            <SelectItem value="Urgente">Urgente</SelectItem>
-                                                            <SelectItem value="Alta">Alta</SelectItem>
-                                                            <SelectItem value="Média">Média</SelectItem>
-                                                            <SelectItem value="Baixa">Baixa</SelectItem>
+                                                            <SelectItem value="Urgent">Urgent</SelectItem>
+                                                            <SelectItem value="High">High</SelectItem>
+                                                            <SelectItem value="Medium">Medium</SelectItem>
+                                                            <SelectItem value="Low">Low</SelectItem>
                                                         </SelectContent>
                                                     </Select>
                                                 </FormControl>
@@ -203,27 +218,16 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                                             </FormItem>
                                         )}
                                     />
+                                    
                                 </div>
-                                <FormField
-                                    control={form.control}
-                                    name="description"
-                                    render={({ field }) => (
-                                        <FormItem className="w-full">
-                                            <FormLabel>Descrição</FormLabel>
-                                            <FormControl>
-                                                <Textarea disabled={isLoading} placeholder="Descrição da tarefa" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                
                                 <div className="flex flex-row gap-5">
                                     <FormField
                                         control={form.control}
                                         name="value"
                                         render={({ field }) => (
                                             <FormItem className="w-full">
-                                                <FormLabel>Valor</FormLabel>
+                                                <FormLabel>Price</FormLabel>
                                                 <FormControl>
                                                     <Input disabled={isLoading} placeholder="R$ 1000" {...field} />
                                                 </FormControl>
@@ -236,7 +240,7 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                                         name="payDate"
                                         render={({ field }) => (
                                             <FormItem className="w-full">
-                                                <FormLabel>Data de pagamento</FormLabel>
+                                                <FormLabel>Pay Date</FormLabel>
                                                 <FormControl>
                                                     <Input disabled={isLoading} type="date" {...field} />
                                                 </FormControl>
@@ -245,10 +249,33 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                                         )}
                                     />
                                 </div>
+
+                                <FormField
+                                    control={form.control}
+                                    name="status"
+                                    render={({ field }) => (
+                                        <FormItem className="w-full">
+                                            <FormLabel>Status</FormLabel>
+                                            <FormControl>
+                                                <Select disabled={isLoading} onValueChange={field.onChange} defaultValue={field.value}>
+                                                    <SelectTrigger className="w-full">
+                                                        <SelectValue placeholder="Status" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="Backlog">Backlog</SelectItem>
+                                                        <SelectItem value="In-progress">In-progress</SelectItem>
+                                                        <SelectItem value="Completed">Completed</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                             </div>
                         </div>
                         <DialogFooter className="flex justify-between">
-                            <ButtonSubmit text={task ? "Atualizar" : "Adicionar"} isLoading={isLoading} />
+                            <ButtonSubmit text={task ? "Update" : "Create"} isLoading={isLoading} />
                         </DialogFooter>
                     </form>
                 </Form>

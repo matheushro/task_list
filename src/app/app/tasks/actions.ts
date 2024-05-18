@@ -13,12 +13,11 @@ export async function CreateNewTask(values: any) {
         }
       }
 
-    const { name, description, expectedDelivery, priority, value, payDate } = values;
-    console.log({id_user: session.user.id})
+    const { name, description, expectedDelivery, priority, value, payDate, status } = values;
 
     await connectMongoDB();
 
-    const task = await Task.create({ id_user: session.user.id.toString(), name, description, expectedDelivery, priority, value, payDate });
+    const task = await Task.create({ id_user: session.user.id.toString(), status, name, description, expectedDelivery, priority, value, payDate });
 
     return JSON.parse(JSON.stringify(task));
 }
@@ -48,10 +47,10 @@ export async function UpdateTask(id: string, values: any) {
         }
     }
     
-    const { name, description, expectedDelivery, priority, value, payDate } = values;
+    const { name, description, expectedDelivery, priority, value, payDate, status } = values;
     await connectMongoDB();
 
-    await Task.findByIdAndUpdate(id, { name, description, expectedDelivery, priority, value, payDate });
+    await Task.findByIdAndUpdate(id, {status, name, description, expectedDelivery, priority, value, payDate });
 
 }
 

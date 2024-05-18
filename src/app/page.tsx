@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { signIn } from '@/services/auth';
+import { FaGoogle } from "react-icons/fa";
 
 
 export default function Home() {
@@ -8,8 +9,8 @@ export default function Home() {
     <div className="container h-screen flex items-center justify-center align-middle">
       <Card className="flex flex-col w-96">
         <CardHeader className='text-center'>
-          <CardTitle>Realize login</CardTitle>
-          <CardDescription>Escolha a forma de login</CardDescription>
+          <CardTitle>Login</CardTitle>
+          <CardDescription>Choose how to login</CardDescription>
         </CardHeader>
         <CardContent className="flex-grow grid gap-4">
           <form
@@ -18,7 +19,10 @@ export default function Home() {
               await signIn("google")
             }}
           >
-            <Button className='w-full' type="submit">Login com Google</Button>
+            <Button variant={'outline'} className='w-full gap-5' type="submit">
+              <FaGoogle size={20} />
+              Login with Google Account
+            </Button>
           </form>
         </CardContent>
         {/* <CardFooter className="mt-auto">

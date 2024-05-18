@@ -7,5 +7,6 @@ export type Task = {
     expectedDelivery: string
     payDate: string
     deliveryDate: string
-    status: "pending" | "processing" | "success" | "failed"
+    status: string
 }
+
