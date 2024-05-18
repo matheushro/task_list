@@ -106,7 +106,7 @@ import { Task } from "@/types/Task"
           },
           cell: ({ row }) => (
             <div>
-              {formatDateToBR(row.getValue("payDate"))}
+              {formatDateToBR(row.getValue("expectedDelivery"))}
             </div>
           ),
         },
