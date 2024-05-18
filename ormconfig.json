@@ -1,0 +1,9 @@
+{
+    "type": "mongodb",
+    "host": "localhost",
+    "port": 27017,
+    "database": "financeiro",
+    "useUnifiedTopology": true,
+    "entities": ["src/entities/*.ts"],
+    "synchronize": true
+}
