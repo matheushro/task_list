@@ -35,6 +35,7 @@ import { useToast } from "@/components/ui/use-toast"
 
 import { useRouter } from "next/navigation"
 import { CreateNewTask, UpdateTask } from "../actions"
+import { Task } from "@/types/Task"
 
 
 const formSchema = z.object({
@@ -62,7 +63,7 @@ const formSchema = z.object({
     }),
 })
 
-export default function TaskCard({ task, onEdit }: { task: any, onEdit: (task: any) => void }) {
+export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: (task: Task | null) => void }) {
     const router = useRouter()
     const { toast } = useToast()
     const [isLoading, setIsLoading] = useState(false)

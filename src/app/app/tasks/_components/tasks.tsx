@@ -4,14 +4,15 @@
 import { DataTable } from "./data-table"
 import { useState } from "react"
 import TaskCard from "./TaskCard";
+import { Task } from "@/types/Task";
 
 
-export default function Tasks({tasks}: any){
+export default function Tasks(tasks: Task | any){
 
-    const [currentTask, setCurrentTask] = useState(null)
-    const onEdit = (todo: any | null) => {
-        setCurrentTask(todo)
-        if(todo && todo?._id){
+    const [currentTask, setCurrentTask] = useState<Task | null>(null)
+    const onEdit = (task: Task | null) => {
+        setCurrentTask(task)
+        if(task && task?._id){
             document.getElementById('cardTask')?.click();
         }
     }; 

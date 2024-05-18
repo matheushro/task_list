@@ -26,23 +26,13 @@ import {
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { formatCurrencyToBR, formatDateToBR } from "@/lib/utils"
-import { EllipsisVertical, PenIcon, Trash } from "lucide-react"
+import { ArrowUpDown, EllipsisVertical, PenIcon, Trash } from "lucide-react"
 import { DeleteTask } from "../actions"
 import { useRouter } from "next/navigation"
+import { Task } from "@/types/Task"
 
-
-
-export type Payment = {
-    _id: string
-    price: number
-    priority: "pending" | "processing" | "success" | "failed"
-    name: string
-    expectedDelivery: string
-    payDate: string
-  }
-  
   type TodoDataTable = {
-    data: any[]
+    data: Task[] | any
     onEdit: (todo: any) => void;
   }
   
@@ -59,18 +49,49 @@ export type Payment = {
         onEdit(todo)
     };
 
-    const columns: ColumnDef<Payment>[] = [
+    const columns: ColumnDef<Task>[] = [
         {
           accessorKey: "priority",
-          header: "Prioridade",
+          header: ({ column }) => {
+            return (
+              <Button
+                variant="link"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              >
+                Prioridade
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+              </Button>
+            )
+          },
         },
         {
           accessorKey: "name",
-          header: "Nome",
+          header: ({ column }) => {
+            return (
+              <Button
+                variant="link"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              >
+                Nome
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+              </Button>
+            )
+          },
+          
         },
         {
           accessorKey: "expectedDelivery",
-          header: "Data de entrega",
+          header: ({ column }) => {
+            return (
+              <Button
+                variant="link"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              >
+                Data de entrega prevista
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+              </Button>
+            )
+          },
           cell: ({ row }) => (
             <div>
               {formatDateToBR(row.getValue("payDate"))}
@@ -79,7 +100,17 @@ export type Payment = {
         },
         {
           accessorKey: "value",
-          header: "Valor",
+          header: ({ column }) => {
+            return (
+              <Button
+                variant="link"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              >
+                Preço
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+              </Button>
+            )
+          },
           cell: ({ row }) => (
             <div>
               {formatCurrencyToBR(row.getValue("value"))}
@@ -88,7 +119,17 @@ export type Payment = {
         },
         {
           accessorKey: "payDate",
-          header: "Data de pagamento",
+          header: ({ column }) => {
+            return (
+              <Button
+                variant="link"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              >
+                Data de pagamento
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+              </Button>
+            )
+          },
           cell: ({ row }) => (
             <div>
               {formatDateToBR(row.getValue("payDate"))}
