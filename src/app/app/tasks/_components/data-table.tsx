@@ -23,12 +23,11 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-import { Input } from "@/components/ui/input"
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { formatCurrencyToBR, formatDateToBR } from "@/lib/utils"
-import { CreditCard, EllipsisVertical, Keyboard, PenIcon, Settings, Trash, User } from "lucide-react"
-import { DeleteTask } from "@/actions/DeleteTask"
+import { EllipsisVertical, PenIcon, Trash } from "lucide-react"
+import { DeleteTask } from "../actions"
 import { useRouter } from "next/navigation"
 
 
@@ -48,6 +47,7 @@ export type Payment = {
   }
   
   export function DataTable({data, onEdit}: TodoDataTable) {
+    const router = useRouter()
 
     
     const [sorting, setSorting] = React.useState<SortingState>([])
@@ -57,7 +57,7 @@ export type Payment = {
 
     const handleEditTodo = (todo: any) => {
         onEdit(todo)
-      };
+    };
 
     const columns: ColumnDef<Payment>[] = [
         {
@@ -112,6 +112,7 @@ export type Payment = {
                   <DropdownMenuGroup>
                     <DropdownMenuItem onClick={async () => {
                       await DeleteTask(data._id)
+                      router.refresh()
       
                     }}>
                       <Trash className="mr-2 h-4 w-4" />
