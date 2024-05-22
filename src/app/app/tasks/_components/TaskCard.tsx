@@ -40,24 +40,24 @@ import { Task } from "@/types/Task"
 
 const formSchema = z.object({
     name: z.string().min(2, {
-        message: "Nome deve ter pelo menos 2 caractéres.",
+        message: "Name must have at least 2 characters",
     }).max(50, {
-        message: "Nome deve ter no máximo 50 caractéres.",
+        message: "Name must have at most 50 characters",
     }),
     description: z.string().min(2, {
-        message: "Descrição deve ter pelo menos 2 caractéres.",
-    }).max(50, {
-        message: "Descrição deve ter no máximo 50 caractéres.",
+        message: "Description must have at least 2 characters.",
+    }).max(255, {
+        message: "Description must have at most 255 characters.",
     }),
     expectedDelivery: z.string().max(50, {
         message: "Previsão de entrega deve ter no máximo 50 caractéres.",
     }),
     priority: z.string().default("Urgent"),
     value: z.string().max(50, {
-        message: "Valor deve ter no máximo 50 caractéres.",
+        message: "Value must have at most 50 characters.",
     }),
     payDate: z.string().max(50, {
-        message: "Data de pagamento deve ter no máximo 50 caractéres.",
+        message: "Pay date must have at most 50 characters.",
     }),
     status: z.string().default("Backlog")
 })
@@ -264,6 +264,7 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                                                     <SelectContent>
                                                         <SelectItem value="Backlog">Backlog</SelectItem>
                                                         <SelectItem value="In-progress">In-progress</SelectItem>
+                                                        <SelectItem value="Review">Review</SelectItem>
                                                         <SelectItem value="Completed">Completed</SelectItem>
                                                     </SelectContent>
                                                 </Select>
