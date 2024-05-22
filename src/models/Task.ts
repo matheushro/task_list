@@ -20,7 +20,7 @@ const taskSchema = new Schema(
             type: String,
             required: [true, 'A descrição é obrigatória'],
             minlength: [2, 'A descrição deve ter pelo menos 2 caracteres'],
-            maxlength: [50, 'A descrição deve ter no máximo 50 caracteres'],
+            maxlength: [255, 'A descrição deve ter no máximo 50 caracteres'],
         },
         expectedDelivery: {
             type: String,
