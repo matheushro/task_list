@@ -60,8 +60,8 @@ const formSchema = z.object({
         message: "Pay date must have at most 50 characters.",
     }),
     status: z.string().default("Backlog"),
-    spentHours: z.string().max(3, {
-        message: "Spent hours must have at most 3 characters.",
+    spentHours: z.string().max(50, {
+        message: "Spent hours must have at most 50 characters.",
     }),
 })
 
@@ -160,7 +160,7 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <div className="grid w-full items-center gap-4">
-                            <div className="grid grid-cols-2 gap-5">
+                            <div className="flex flex-col gap-5">
                                 <FormField
                                     control={form.control}
                                     name="name"
@@ -210,7 +210,7 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                                         </FormItem>
                                     )}
                                 />
-                                <div className="flex flex-row gap-5">
+                                <div className="grid grid-cols-2 gap-5">
                                     <FormField
                                         control={form.control}
                                         name="expectedDelivery"
@@ -248,6 +248,7 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                                         )}
                                     />
                                     
+
                                     <FormField
                                         control={form.control}
                                         name="value"
