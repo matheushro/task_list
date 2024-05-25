@@ -38,6 +38,10 @@ const taskSchema = new Schema(
             type: String,
             maxlength: [50, 'A data de pagamento deve ter no máximo 50 caracteres'],
         },
+        spentHours: {
+            type: String,
+            maxlength: [3, 'As horas gastas devem ter no máximo 3 caracteres'],
+        },
 
     },{
         timestamps: true

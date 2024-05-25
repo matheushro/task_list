@@ -8,5 +8,6 @@ export type Task = {
     payDate: string
     deliveryDate: string
     status: string
+    spentHours?: string
 }
 

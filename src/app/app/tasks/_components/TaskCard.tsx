@@ -59,7 +59,10 @@ const formSchema = z.object({
     payDate: z.string().max(50, {
         message: "Pay date must have at most 50 characters.",
     }),
-    status: z.string().default("Backlog")
+    status: z.string().default("Backlog"),
+    spentHours: z.string().max(3, {
+        message: "Spent hours must have at most 3 characters.",
+    }),
 })
 
 export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: (task: Task | null) => void }) {
@@ -78,6 +81,7 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
             value: task?.value || "",
             payDate: task?.payDate || "",
             status: task?.status || "Backlog",
+            spentHours: task?.spentHours || "",
         },
     })
 
@@ -118,6 +122,7 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                 value: task.value,
                 payDate: task.payDate,
                 status: task.status,
+                spentHours: task.spentHours,
             });
         } else {
             form.reset({
@@ -128,6 +133,7 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                 value: "",
                 payDate: "",
                 status: "Backlog",
+                spentHours: "",
             });
         }
     }, [task, form]);
@@ -154,7 +160,7 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <div className="grid w-full items-center gap-4">
-                            <div className="flex flex-col gap-5">
+                            <div className="grid grid-cols-2 gap-5">
                                 <FormField
                                     control={form.control}
                                     name="name"
@@ -176,6 +182,29 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                                             <FormLabel>Description*</FormLabel>
                                             <FormControl>
                                                 <Textarea disabled={isLoading} placeholder="Task description" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="status"
+                                    render={({ field }) => (
+                                        <FormItem className="w-full">
+                                            <FormLabel>Status</FormLabel>
+                                            <FormControl>
+                                                <Select disabled={isLoading} onValueChange={field.onChange} defaultValue={field.value}>
+                                                    <SelectTrigger className="w-full">
+                                                        <SelectValue placeholder="Status" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="Backlog">Backlog</SelectItem>
+                                                        <SelectItem value="In-progress">In-progress</SelectItem>
+                                                        <SelectItem value="Review">Review</SelectItem>
+                                                        <SelectItem value="Completed">Completed</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -219,9 +248,6 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                                         )}
                                     />
                                     
-                                </div>
-                                
-                                <div className="flex flex-row gap-5">
                                     <FormField
                                         control={form.control}
                                         name="value"
@@ -248,31 +274,22 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                                             </FormItem>
                                         )}
                                     />
+                                    <FormField
+                                        control={form.control}
+                                        name="spentHours"
+                                        render={({ field }) => (
+                                            <FormItem className="w-full">
+                                                <FormLabel>Spent hours</FormLabel>
+                                                <FormControl>
+                                                    <Input type="number" disabled={isLoading} placeholder="10" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
                                 </div>
 
-                                <FormField
-                                    control={form.control}
-                                    name="status"
-                                    render={({ field }) => (
-                                        <FormItem className="w-full">
-                                            <FormLabel>Status</FormLabel>
-                                            <FormControl>
-                                                <Select disabled={isLoading} onValueChange={field.onChange} defaultValue={field.value}>
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Status" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value="Backlog">Backlog</SelectItem>
-                                                        <SelectItem value="In-progress">In-progress</SelectItem>
-                                                        <SelectItem value="Review">Review</SelectItem>
-                                                        <SelectItem value="Completed">Completed</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                
                             </div>
                         </div>
                         <DialogFooter className="flex justify-between">
