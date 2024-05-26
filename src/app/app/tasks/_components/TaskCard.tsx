@@ -63,6 +63,9 @@ const formSchema = z.object({
     spentHours: z.string().max(50, {
         message: "Spent hours must have at most 50 characters.",
     }),
+    project: z.string().max(50, {
+        message: "Project must have at most 50 characters.",
+    }),
 })
 
 export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: (task: Task | null) => void }) {
@@ -82,6 +85,7 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
             payDate: task?.payDate || "",
             status: task?.status || "Backlog",
             spentHours: task?.spentHours || "",
+            project: task?.project || "",
         },
     })
 
@@ -100,8 +104,8 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                 toast({
                     title: "Task created succesfuly",
                 })
+                form.reset();
             }
-            form.reset();
             router.refresh()
         } catch (error: any) {
             toast({
@@ -123,6 +127,7 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                 payDate: task.payDate,
                 status: task.status,
                 spentHours: task.spentHours,
+                project: task.project,
             });
         } else {
             form.reset({
@@ -134,6 +139,7 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                 payDate: "",
                 status: "Backlog",
                 spentHours: "",
+                project: "",
             });
         }
     }, [task, form]);
@@ -187,30 +193,53 @@ export default function TaskCard({ task, onEdit }: { task: Task | null, onEdit: 
                                         </FormItem>
                                     )}
                                 />
-                                <FormField
-                                    control={form.control}
-                                    name="status"
-                                    render={({ field }) => (
-                                        <FormItem className="w-full">
-                                            <FormLabel>Status</FormLabel>
-                                            <FormControl>
-                                                <Select disabled={isLoading} onValueChange={field.onChange} defaultValue={field.value}>
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Status" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value="Backlog">Backlog</SelectItem>
-                                                        <SelectItem value="In-progress">In-progress</SelectItem>
-                                                        <SelectItem value="Review">Review</SelectItem>
-                                                        <SelectItem value="Completed">Completed</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                
                                 <div className="grid grid-cols-2 gap-5">
+                                    <FormField
+                                        control={form.control}
+                                        name="project"
+                                        render={({ field }) => (
+                                            <FormItem className="w-full">
+                                                <FormLabel>Project</FormLabel>
+                                                <FormControl>
+                                                    <Select disabled={isLoading} onValueChange={field.onChange} defaultValue={field.value}>
+                                                        <SelectTrigger className="w-full">
+                                                            <SelectValue placeholder="Project" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectItem value="Vai de Ticket">Vai de Ticket</SelectItem>
+                                                            <SelectItem value="DGI">DGI</SelectItem>
+                                                            <SelectItem value="QR Chefe - APP">QR Chefe - APP</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="status"
+                                        render={({ field }) => (
+                                            <FormItem className="w-full">
+                                                <FormLabel>Status</FormLabel>
+                                                <FormControl>
+                                                    <Select disabled={isLoading} onValueChange={field.onChange} defaultValue={field.value}>
+                                                        <SelectTrigger className="w-full">
+                                                            <SelectValue placeholder="Status" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectItem value="Backlog">Backlog</SelectItem>
+                                                            <SelectItem value="In-progress">In-progress</SelectItem>
+                                                            <SelectItem value="Review">Review</SelectItem>
+                                                            <SelectItem value="Completed">Completed</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
                                     <FormField
                                         control={form.control}
                                         name="expectedDelivery"

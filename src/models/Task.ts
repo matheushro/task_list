@@ -42,6 +42,10 @@ const taskSchema = new Schema(
             type: String,
             maxlength: [3, 'As horas gastas devem ter no máximo 3 caracteres'],
         },
+        project: {
+            type: String,
+            maxlength: [50, 'O projeto deve ter no máximo 50 caracteres'],
+        },
 
     },{
         timestamps: true

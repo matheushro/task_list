@@ -9,5 +9,6 @@ export type Task = {
     deliveryDate: string
     status: string
     spentHours?: string
+    project?: string
 }
 

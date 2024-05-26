@@ -77,6 +77,21 @@ import { Task } from "@/types/Task"
           },
         },
         {
+          accessorKey: "project",
+          header: ({ column }) => {
+            return (
+              <Button
+                variant="link"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              >
+                Project Name
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+              </Button>
+            )
+          },
+          
+        },
+        {
           accessorKey: "name",
           header: ({ column }) => {
             return (
@@ -259,7 +274,7 @@ import { Task } from "@/types/Task"
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
             >
-                Anterior
+                Previous
             </Button>
             <Button
                 variant="outline"
@@ -267,7 +282,7 @@ import { Task } from "@/types/Task"
                 onClick={() => table.nextPage()}
                 disabled={data && !table.getCanNextPage()}
             >
-                Próximo
+                Next
             </Button>
         </div>
     </>
