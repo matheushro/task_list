@@ -62,7 +62,7 @@ const formSchema = z.object({
     status: z.string().default("Backlog"),
     spentHours: z.string().max(50, {
         message: "Spent hours must have at most 50 characters.",
-    }),
+    }).optional(),
     project: z.string().max(50, {
         message: "Project must have at most 50 characters.",
     }),
