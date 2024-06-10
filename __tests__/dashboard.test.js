@@ -100,4 +100,19 @@ describe('dashboard', () => {
         });
 
     });
+
+    test('renders "No data available" summary on error', async () => {
+
+        GetTaskStatistics.mockRejectedValueOnce(new Error('Failed to fetch'));
+
+        // Resolve the Page component
+        const PageResolved = await resolvedComponent(Summary);
+
+        // Render the resolved component
+        render(<PageResolved />);
+
+        // Check if "Dashboard" text is present in the document
+        expect(await screen.findByText('No data available')).toBeInTheDocument();
+
+    });
 });

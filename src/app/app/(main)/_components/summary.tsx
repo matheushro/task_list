@@ -2,7 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { GetTaskStatistics } from "../actions";
 
 export default async function Summary(){
-    const stats = await GetTaskStatistics();
+    let stats = null;
+    try{
+        stats = await GetTaskStatistics();
+    }
+    catch(e){
+        console.error(e);
+    }
 
     if(!stats) return (
         <div>
