@@ -4,6 +4,12 @@ import { GetTaskStatistics } from "../actions";
 export default async function Summary(){
     const stats = await GetTaskStatistics();
 
+    if(!stats) return (
+        <div>
+            <h1>No data available</h1>=
+        </div>
+    )
+
     return (
         <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-12">
             <Card className="shadow bg-green-400">
