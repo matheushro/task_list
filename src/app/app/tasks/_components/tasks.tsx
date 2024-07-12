@@ -18,7 +18,7 @@ export default function Tasks({tasks}: Task[] | any){
     }; 
 
     return (
-        <div className="space-y-5">
+        <div className="space-y-5 w-full relative">
             <TaskCard task={currentTask} onEdit={onEdit} />
             <DataTable data={tasks} onEdit={onEdit} />
         </div>
