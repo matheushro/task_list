@@ -6,9 +6,9 @@ export default async function Layout({children}: PropsWithChildren){
     const session = await auth()
 
     return (
-        <div className="grid grid-cols-[16rem_1fr] gap-4">
+        <div className="grid lg:grid-cols-[16rem_1fr] gap-4">
             <Sidebar />
-            <main className="p-10">
+            <main className="p-10 pt-24">
                 {children}
             </main>
         </div>

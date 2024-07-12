@@ -80,3 +80,54 @@ export async function GetTaskStatistics() {
         throw error;
     }
 }
+
+export async function GetMonthlyPayments() {
+    try {
+        const session = await auth();
+        if (!session?.user?.id) {
+            return {
+                error: 'Not authorized',
+                data: null,
+            };
+        }
+
+        await connectMongoDB();
+
+        const idUser = session.user.id;
+        const now = new Date();
+        const firstMonth = new Date(now.getFullYear(), now.getMonth() - 11, 1);
+
+        const monthlyPayments = await Task.aggregate([
+            { 
+                $match: { 
+                    id_user: idUser, 
+                    payDate: { $exists: true, $ne: "" },
+                    expectedDelivery: { $exists: true, $ne: "" }
+                }
+            },
+            {
+                $addFields: {
+                    expectedDeliveryDate: { $dateFromString: { dateString: "$expectedDelivery" } }
+                }
+            },
+            { 
+                $match: { 
+                    expectedDeliveryDate: { $gte: firstMonth } 
+                }
+            },
+            {
+                $group: {
+                    _id: { $month: "$expectedDeliveryDate" },
+                    monthlyTotal: { $sum: { $cond: [{ $gt: [{ $strLenCP: { $ifNull: ["$value", ""] } }, 0] }, { $toDouble: "$value" }, 0] } }
+                }
+            },
+            {
+                $sort: { "_id": 1 } // Ensure the result is sorted by month
+            }
+        ]);
+
+        return monthlyPayments;
+    } catch (error) {
+        throw error;
+    }
+}
