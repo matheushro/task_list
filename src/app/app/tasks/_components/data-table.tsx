@@ -6,7 +6,6 @@ import {
     ColumnDef,
     ColumnFiltersState,
     SortingState,
-    VisibilityState,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
@@ -32,6 +31,8 @@ import { DeleteTask } from "../actions"
 import { useRouter } from "next/navigation"
 import { Task } from "@/types/Task"
 import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Label } from "@/components/ui/label"
 
 type TodoDataTable = {
     data: Task[] | any
@@ -43,6 +44,21 @@ export function DataTable({ data, onEdit }: TodoDataTable) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     const [globalFilter, setGlobalFilter] = React.useState("")
+
+    const [projectFilter, setProjectFilter] = React.useState<string>("");
+    const [statusFilter, setStatusFilter] = React.useState<string>("second")
+
+    const handleProjectFilterChange = (value: string) => {
+        value = value == "All" ? "" : value;
+        setProjectFilter(value);
+        table.getColumn("project")?.setFilterValue(value);
+    };
+
+    const handleStatusFilterChange = (value: string) => {
+        value = value == "All" ? "" : value;
+        setStatusFilter(value);
+        table.getColumn("status")?.setFilterValue(value);
+    };
 
     const handleEditTodo = (todo: any) => {
         onEdit(todo)
@@ -222,7 +238,7 @@ export function DataTable({ data, onEdit }: TodoDataTable) {
     })
 
     return (
-          <div className="md:max-w-full max-w-sm overflow-x-auto">
+          <div className="md:max-w-full max-w-sm overflow-x-auto flex flex-col gap-5">
 
             <Input
               placeholder="Filter task name"
@@ -231,6 +247,52 @@ export function DataTable({ data, onEdit }: TodoDataTable) {
                 table.getColumn("name")?.setFilterValue(event.target.value)
               }
             />
+
+            <div className="grid md:grid-cols-3 gap-5">
+
+                    <Select
+                        value={projectFilter}
+                        onValueChange={(e) => handleProjectFilterChange(e)}
+                    >
+                        <SelectTrigger id="project">
+                        <SelectValue placeholder="Filter by project" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="All">All projects</SelectItem>
+                                {Array.from(new Set(data.map((item: any) => item.project))).map((project: any) => (
+                                    <>
+                                        {project && (
+                                            <SelectItem key={project} value={project.toString()}>{project}</SelectItem>   
+                                        )}
+                                    </>
+                                ))}
+                        </SelectGroup>
+                        </SelectContent>
+                    </Select>
+
+                    <Select
+                        value={statusFilter}
+                        onValueChange={(e) => handleStatusFilterChange(e)}
+                    >
+                        <SelectTrigger id="project">
+                        <SelectValue placeholder="Filter by status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="All">All status</SelectItem>
+                                {Array.from(new Set(data.map((item: any) => item.status))).map((status: any) => (
+                                    <>
+                                        {status && (
+                                            <SelectItem key={status} value={status.toString()}>{status}</SelectItem>   
+                                        )}
+                                    </>
+                                ))}
+                        </SelectGroup>
+                        </SelectContent>
+                    </Select>
+            </div>
+
             <div>
               <Table className="min-w-full divide-y divide-gray-200">
                     <TableHeader>
