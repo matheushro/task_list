@@ -67,19 +67,34 @@ export default async function page() {
             {/* Charts Grid */}
             <div className="grid lg:grid-cols-2 gap-8">
                 {/* Monthly Income Trend */}
-                <div className="bg-white p-6 rounded-lg shadow-lg border">
-                    <MonthlyIncomeChart data={monthlyIncome} />
+                <div className="bg-white rounded-lg shadow-lg border overflow-hidden">
+                    <div className="p-6 pb-4">
+                        <h3 className="text-lg font-semibold mb-4">Monthly Income Trend</h3>
+                    </div>
+                    <div className="px-6 pb-6">
+                        <MonthlyIncomeChart data={monthlyIncome} />
+                    </div>
                 </div>
 
                 {/* Task Status Distribution */}
-                <div className="bg-white p-6 rounded-lg shadow-lg border">
-                    <TaskStatusChart data={statusDistribution} />
+                <div className="bg-white rounded-lg shadow-lg border overflow-hidden">
+                    <div className="p-6 pb-4">
+                        <h3 className="text-lg font-semibold mb-4">Task Status Distribution</h3>
+                    </div>
+                    <div className="px-6 pb-6">
+                        <TaskStatusChart data={statusDistribution} />
+                    </div>
                 </div>
 
                 {/* Project Performance */}
                 {projectPerformance.length > 0 && (
-                    <div className="bg-white p-6 rounded-lg shadow-lg border lg:col-span-2">
-                        <ProjectPerformanceChart data={projectPerformance} />
+                    <div className="bg-white rounded-lg shadow-lg border overflow-hidden lg:col-span-2">
+                        <div className="p-6 pb-4">
+                            <h3 className="text-lg font-semibold mb-4">Project Performance</h3>
+                        </div>
+                        <div className="px-6 pb-6">
+                            <ProjectPerformanceChart data={projectPerformance} />
+                        </div>
                     </div>
                 )}
 

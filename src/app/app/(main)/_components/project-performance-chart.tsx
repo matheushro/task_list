@@ -102,7 +102,6 @@ export default function ProjectPerformanceChart({ data }: ProjectPerformanceChar
 
     return (
         <div className="w-full h-80">
-            <h3 className="text-lg font-semibold mb-4">Project Performance</h3>
             <Bar data={chartData} options={options} />
         </div>
     );

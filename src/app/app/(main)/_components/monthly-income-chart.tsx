@@ -119,7 +119,6 @@ export default function MonthlyIncomeChart({ data }: MonthlyIncomeChartProps) {
 
     return (
         <div className="w-full h-80">
-            <h3 className="text-lg font-semibold mb-4">Monthly Income Trend</h3>
             <Line data={chartData} options={options} />
         </div>
     );

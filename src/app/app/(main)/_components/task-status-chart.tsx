@@ -60,7 +60,6 @@ export default function TaskStatusChart({ data }: TaskStatusChartProps) {
 
     return (
         <div className="w-full h-80">
-            <h3 className="text-lg font-semibold mb-4">Task Status Distribution</h3>
             <Doughnut data={chartData} options={options} />
         </div>
     );
