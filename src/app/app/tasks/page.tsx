@@ -6,10 +6,13 @@ import { GetTasks } from "./actions"
 
 
 export default async function task() {
-  const tasks: Task[] = await GetTasks()
-
+  const response = await GetTasks()
+  
+  if ('error' in response) {
+    return <div>Error loading tasks</div>
+  }
 
   return (
-    <Tasks tasks={tasks} />
+    <Tasks tasks={response} />
   )
 }
