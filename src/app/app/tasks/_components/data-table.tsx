@@ -27,7 +27,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { formatCurrencyToBR, formatDateToBR } from "@/lib/utils"
-import { ArrowUpDown, EllipsisVertical, PenIcon, Trash, Settings } from "lucide-react"
+import { ArrowUpDown, EllipsisVertical, PenIcon, Trash, Settings, FileText } from "lucide-react"
 import { DeleteTask } from "../actions"
 import { useRouter } from "next/navigation"
 import { Task } from "@/types/Task"
@@ -35,6 +35,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import BulkStatusModal from "./bulk-status-modal"
+import BudgetModal from "./budget-modal"
 
 type TodoDataTable = {
     data: Task[] | any
@@ -48,6 +49,7 @@ export function DataTable({ data, onEdit }: TodoDataTable) {
     const [globalFilter, setGlobalFilter] = React.useState("")
     const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
     const [bulkModalOpen, setBulkModalOpen] = React.useState(false)
+    const [budgetModalOpen, setBudgetModalOpen] = React.useState(false)
 
     const [projectFilter, setProjectFilter] = React.useState<string>("");
     const [statusFilter, setStatusFilter] = React.useState<string>("second")
@@ -68,10 +70,8 @@ export function DataTable({ data, onEdit }: TodoDataTable) {
         onEdit(todo)
     };
 
-    const selectedTaskIds = Object.keys(rowSelection)
-            .filter(key => rowSelection[key])
-            .map(key => data[parseInt(key)]?._id)
-            .filter(Boolean)
+    const selectedTaskIds = Object.keys(rowSelection).filter(key => rowSelection[key]).map(key => data[parseInt(key)]?._id).filter(Boolean)
+    const selectedTasks = data.filter((task: Task) => selectedTaskIds.includes(task._id))
 
     const handleBulkStatusUpdate = () => {
         if (selectedTaskIds.length === 0) {
@@ -83,6 +83,13 @@ export function DataTable({ data, onEdit }: TodoDataTable) {
     const handleBulkUpdateSuccess = () => {
         setRowSelection({})
         router.refresh()
+    };
+
+    const handleGenerateBudget = () => {
+        if (selectedTaskIds.length === 0) {
+            return
+        }
+        setBudgetModalOpen(true)
     };
 
     const columns: ColumnDef<Task>[] = [
@@ -299,6 +306,15 @@ export function DataTable({ data, onEdit }: TodoDataTable) {
                     {selectedTaskIds.length} task(s) selected
                   </span>
                   <Button 
+                    onClick={handleGenerateBudget}
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2"
+                  >
+                    <FileText className="h-4 w-4" />
+                    Generate Budget
+                  </Button>
+                  <Button 
                     onClick={handleBulkStatusUpdate}
                     variant="outline"
                     size="sm"
@@ -424,6 +440,12 @@ export function DataTable({ data, onEdit }: TodoDataTable) {
                 onOpenChange={setBulkModalOpen}
                 selectedTasks={selectedTaskIds}
                 onSuccess={handleBulkUpdateSuccess}
+            />
+
+            <BudgetModal
+                open={budgetModalOpen}
+                onOpenChange={setBudgetModalOpen}
+                selectedTasks={selectedTasks}
             />
         </div>
     )
