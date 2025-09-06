@@ -12,6 +12,7 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
+    RowSelectionState,
 } from "@tanstack/react-table"
 
 import {
@@ -23,16 +24,17 @@ import {
     TableRow,
 } from "@/components/ui/table"
 
-
+import { Checkbox } from "@/components/ui/checkbox"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { formatCurrencyToBR, formatDateToBR } from "@/lib/utils"
-import { ArrowUpDown, EllipsisVertical, PenIcon, Trash } from "lucide-react"
+import { ArrowUpDown, EllipsisVertical, PenIcon, Trash, Settings } from "lucide-react"
 import { DeleteTask } from "../actions"
 import { useRouter } from "next/navigation"
 import { Task } from "@/types/Task"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
+import BulkStatusModal from "./bulk-status-modal"
 
 type TodoDataTable = {
     data: Task[] | any
@@ -44,6 +46,8 @@ export function DataTable({ data, onEdit }: TodoDataTable) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     const [globalFilter, setGlobalFilter] = React.useState("")
+    const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
+    const [bulkModalOpen, setBulkModalOpen] = React.useState(false)
 
     const [projectFilter, setProjectFilter] = React.useState<string>("");
     const [statusFilter, setStatusFilter] = React.useState<string>("second")
@@ -64,7 +68,43 @@ export function DataTable({ data, onEdit }: TodoDataTable) {
         onEdit(todo)
     };
 
+    const selectedTaskIds = Object.keys(rowSelection)
+            .filter(key => rowSelection[key])
+            .map(key => data[parseInt(key)]?._id)
+            .filter(Boolean)
+
+    const handleBulkStatusUpdate = () => {
+        if (selectedTaskIds.length === 0) {
+            return
+        }
+        setBulkModalOpen(true)
+    };
+
+    const handleBulkUpdateSuccess = () => {
+        setRowSelection({})
+        router.refresh()
+    };
+
     const columns: ColumnDef<Task>[] = [
+        {
+            id: "select",
+            header: ({ table }) => (
+                <Checkbox
+                    checked={table.getIsAllPageRowsSelected()}
+                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                    aria-label="Select all"
+                />
+            ),
+            cell: ({ row }) => (
+                <Checkbox
+                    checked={row.getIsSelected()}
+                    onCheckedChange={(value) => row.toggleSelected(!!value)}
+                    aria-label="Select row"
+                />
+            ),
+            enableSorting: false,
+            enableHiding: false,
+        },
         {
             accessorKey: "status",
             header: ({ column }) => {
@@ -227,6 +267,7 @@ export function DataTable({ data, onEdit }: TodoDataTable) {
       columns,
       onSortingChange: setSorting,
       onColumnFiltersChange: setColumnFilters,
+      onRowSelectionChange: setRowSelection,
       getCoreRowModel: getCoreRowModel(),
       getPaginationRowModel: getPaginationRowModel(),
       getSortedRowModel: getSortedRowModel(),
@@ -234,19 +275,41 @@ export function DataTable({ data, onEdit }: TodoDataTable) {
       state: {
         sorting,
         columnFilters,
+        rowSelection,
       },
+      enableRowSelection: true,
     })
 
     return (
           <div className="md:max-w-full max-w-sm overflow-x-auto flex flex-col gap-5">
 
-            <Input
-              placeholder="Filter task name"
-              value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-              onChange={(event) =>
-                table.getColumn("name")?.setFilterValue(event.target.value)
-              }
-            />
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+              <Input
+                placeholder="Filter task name"
+                value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+                onChange={(event) =>
+                  table.getColumn("name")?.setFilterValue(event.target.value)
+                }
+                className="flex-1"
+              />
+              
+              {selectedTaskIds.length > 0 && (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">
+                    {selectedTaskIds.length} task(s) selected
+                  </span>
+                  <Button 
+                    onClick={handleBulkStatusUpdate}
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center gap-2"
+                  >
+                    <Settings className="h-4 w-4" />
+                    Update Status
+                  </Button>
+                </div>
+              )}
+            </div>
 
             <div className="grid md:grid-cols-3 gap-5">
 
@@ -355,6 +418,13 @@ export function DataTable({ data, onEdit }: TodoDataTable) {
                     Next
                 </Button>
             </div>
+
+            <BulkStatusModal
+                open={bulkModalOpen}
+                onOpenChange={setBulkModalOpen}
+                selectedTasks={selectedTaskIds}
+                onSuccess={handleBulkUpdateSuccess}
+            />
         </div>
     )
 }

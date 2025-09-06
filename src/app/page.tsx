@@ -25,9 +25,6 @@ export default function Home() {
             </Button>
           </form>
         </CardContent>
-        {/* <CardFooter className="mt-auto">
-          <Button className="w-full">Selecione o destaque </Button>
-        </CardFooter> */}
       </Card>
     </div>
 
