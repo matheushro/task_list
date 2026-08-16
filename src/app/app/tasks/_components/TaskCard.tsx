@@ -41,8 +41,6 @@ import { Task } from "@/types/Task"
 const formSchema = z.object({
     name: z.string().min(2, {
         message: "Name must have at least 2 characters",
-    }).max(50, {
-        message: "Name must have at most 50 characters",
     }),
     description: z.string().min(2, {
         message: "Description must have at least 2 characters.",

@@ -14,7 +14,6 @@ const taskSchema = new Schema(
             type: String,
             required: [true, 'O nome é obrigatório'],
             minlength: [2, 'O nome deve ter pelo menos 2 caracteres'],
-            maxlength: [50, 'O nome deve ter no máximo 50 caracteres'],
         },
         description: {
             type: String,
